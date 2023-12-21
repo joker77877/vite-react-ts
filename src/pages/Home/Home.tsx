@@ -1,4 +1,5 @@
 const aa = () => {
+    const b = 123;
     return (
         <div>
             <h1 className="text-red-50 ">Vite + React</h1>
