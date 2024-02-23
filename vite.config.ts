@@ -2,12 +2,21 @@ import { defineConfig } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import autoImport from 'unplugin-auto-import/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { AntDesignResolver } from './antdResolve';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react({ plugins: [['@swc/plugin-styled-components', {}]] }),
+        sentryVitePlugin({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+
+            // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+        }),
         autoImport({
             include: [
                 /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
@@ -21,8 +30,8 @@ export default defineConfig({
                     react: ['createContext', 'Suspense', 'createElement'],
                     'react-i18next': ['Translation'],
                     'react-query': ['useQuery', 'useMutation', 'QueryClient', 'QueryClientProvider'],
-                    'react-router-dom': ['createBrowserRouter', 'RouterProvider'],
-                    'lodash-es': ['find', 'filter', 'throttle', 'map', 'range', 'random'],
+                    'react-router-dom': ['createBrowserRouter', 'RouterProvider', 'createRoutesFromElements'],
+                    'lodash-es': ['find', 'filter', 'throttle', 'map', 'range', 'random', 'cloneDeep'],
                     recoil: ['atom', 'selector', 'useRecoilState', 'useRecoilValue', 'RecoilRoot', 'useSetRecoilState'],
                 },
             ],
@@ -39,6 +48,7 @@ export default defineConfig({
             ],
             resolvers: [AntDesignResolver({ resolveIcons: true, importStyle: 'less' })],
         }),
+        visualizer(),
     ],
     resolve: {
         alias: { '@': path.resolve(__dirname, './src') },

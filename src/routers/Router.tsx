@@ -1,12 +1,27 @@
-const Home = lazy(() => import('@/pages/Home/Home'));
+// import Layout from '@/pages/Layout/Layout';
+import { wrapCreateBrowserRouter } from '@sentry/react';
+// const Home = lazy(() => import('@/pages/Home/Home'));
+// const Layout = lazy(() => import('@/pages/Layout/Layout'));
 
-const router = createBrowserRouter([
+const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
+const router = sentryCreateBrowserRouter([
     {
         path: '/',
-        Component: Home,
-        // lazy: () => import('@/pages/Home/Home'),
+        Component: lazy(() => import('@/pages/Layout/Layout')),
+        children: [{ path: 'home', Component: lazy(() => import('@/pages/Home/Home')) }],
+        // async lazy() {
+        //     let Home = (await import('@/pages/Home/Home')).default;
+        //     return { Component: Home };
+        // },
     },
 ]);
+// let router = createBrowserRouter(
+//     createRoutesFromElements(
+//         <Route path="/" element={<Layout />}>
+//             <Route path="home" lazy={() => import('../pages/Home/Home')} />
+//         </Route>,
+//     ),
+// );
 // const routeMap: Record<string, string> = {};
 // const renderRoute = (routerList?: typeof routers) => {
 //     return routerList?.map(({ path, element, children, breadcrumbName }) => {
