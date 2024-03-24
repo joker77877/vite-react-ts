@@ -15,7 +15,7 @@ Sentry.init({
             createRoutesFromChildren,
             matchRoutes,
         }),
-        Sentry.replayIntegration(),
+        // Sentry.replayIntegration(),
         Sentry.browserTracingIntegration(),
         Sentry.replayIntegration({
             maskAllText: false,

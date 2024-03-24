@@ -4,12 +4,19 @@ import react from '@vitejs/plugin-react-swc';
 import autoImport from 'unplugin-auto-import/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { VitePWA } from 'vite-plugin-pwa';
 import { AntDesignResolver } from './antdResolve';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react({ plugins: [['@swc/plugin-styled-components', {}]] }),
+        VitePWA({
+            registerType: 'autoUpdate',
+            devOptions: {
+                enabled: true,
+            },
+        }),
         sentryVitePlugin({
             org: process.env.SENTRY_ORG,
             project: process.env.SENTRY_PROJECT,
